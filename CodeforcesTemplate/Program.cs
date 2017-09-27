@@ -60,65 +60,70 @@ namespace CodeforcesTemplate
 
         private static void Main(string[] args)
         {
+#if (DEBUG)
+            double before = GC.GetTotalMemory(false);
+#endif
+            int n = int.Parse(Console.ReadLine());
 
-            long[] s = Console.ReadLine().Split().Select(long.Parse).ToArray();
+            int numberPetya = 0, numberVasya = 0;
 
-            long n = s[0];
-            long p = s[1];
-            long q = s[2];
-            long r = s[3];
-
-            int[] a = Console.ReadLine().Split().Select(int.Parse).ToArray();
-
-            RunTimer();
-
-            long[] pp = new long[n];
-            pp[0] = a[0] * p;
-
-            for (int i = 1; i < n; i++)
-            {
-                if (a[i] * p > pp[i - 1])
-                {
-                    pp[i] = a[i] * p;
-                }
-                else
-                {
-                    pp[i] = pp[i - 1];
-                }
-            }
-
-
-            long[] rr = new long[n];
-
-            rr[n - 1] = a[n - 1] * r;
-
-            for (long i = n - 2; i >= 0; i--)
-            {
-                if (a[i] * r > rr[i + 1])
-                {
-                    rr[i] = a[i] * r;
-                }
-                else
-                {
-                    rr[i] = rr[i + 1];
-                }
-            }
-
-            long res = long.MinValue;
-
+            List<int> list = new List<int>();
 
             for (int i = 0; i < n; i++)
             {
-                long t = pp[i] + a[i] * q + rr[i];
-                res = Math.Max(res, t);
+                list.Add(int.Parse(Console.ReadLine()));
             }
 
-            Console.WriteLine(res);
+            RunTimer();
+
+            list.Sort();
+
+            numberPetya = list[0];
+            numberVasya = list[n - 1];
+
+            if (numberPetya != numberVasya)
+            {
+                int sumPetya = 0, sumVasya = 0;
+
+                while (list.Contains(numberPetya))
+                {
+                    list.Remove(numberPetya);
+                    sumPetya++;
+                }
+
+                while (list.Contains(numberVasya))
+                {
+                    list.Remove(numberVasya);
+                    sumVasya++;
+                }
+
+                if (list.Count == 0 && sumVasya == sumPetya)
+                {
+                    Console.WriteLine("YES\n" + numberPetya.ToString() + " " + numberVasya.ToString());
+                }
+
+                else
+                {
+                    Console.WriteLine("NO");
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("NO");
+            }
+
 
 #if (DEBUG)
             _stopwatch.Stop();
 
+            double after = GC.GetTotalMemory(false);
+
+            double consumedInMegabytes = (after - before) / (1024 * 1024);
+
             Console.WriteLine($"Time elapsed: {_stopwatch.Elapsed}");
+
+            Console.WriteLine($"Consumed memory (MB): {consumedInMegabytes}");
 
             Console.ReadKey();
 #endif
