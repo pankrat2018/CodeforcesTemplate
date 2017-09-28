@@ -17,15 +17,15 @@ namespace CodeforcesTemplate
 
         private static Stopwatch _stopwatch = new Stopwatch();
 
-        static StreamReader _reader = null;
-        static StreamWriter _writer = null;
+        private static StreamReader _reader = null;
+        private static StreamWriter _writer = null;
 
-        static string[] _curLine;
-        static int _curTokenIdx;
+        private static string[] _curLine;
+        private static int _curTokenIdx;
 
-        static char[] _whiteSpaces = new char[] { ' ', '\t', '\r', '\n' };
+        private static char[] _whiteSpaces = new char[] { ' ', '\t', '\r', '\n' };
 
-        public static string ReadNextToken()
+        private static string ReadNextToken()
         {
             if (_curTokenIdx >= _curLine.Length)
             {
@@ -44,7 +44,7 @@ namespace CodeforcesTemplate
             return _curLine[_curTokenIdx++];
         }
 
-        public static int ReadNextInt()
+        private static int ReadNextInt()
         {
             return int.Parse(ReadNextToken());
         }
@@ -63,51 +63,23 @@ namespace CodeforcesTemplate
 #if (DEBUG)
             double before = GC.GetTotalMemory(false);
 #endif
-            int n = int.Parse(Console.ReadLine());
 
-            int numberPetya = 0, numberVasya = 0;
-
-            List<int> list = new List<int>();
-
-            for (int i = 0; i < n; i++)
-            {
-                list.Add(int.Parse(Console.ReadLine()));
-            }
+            string s = Console.ReadLine();
 
             RunTimer();
 
-            list.Sort();
+            int countLeadZero = CountLeadZeros(s);
+            
 
-            numberPetya = list[0];
-            numberVasya = list[n - 1];
+            string ss = s.Substring(0, s.Length - countLeadZero);
 
-            if (numberPetya != numberVasya)
+            string reverse = ReverseString(ss);
+
+            if (reverse == ss)
             {
-                int sumPetya = 0, sumVasya = 0;
-
-                while (list.Contains(numberPetya))
-                {
-                    list.Remove(numberPetya);
-                    sumPetya++;
-                }
-
-                while (list.Contains(numberVasya))
-                {
-                    list.Remove(numberVasya);
-                    sumVasya++;
-                }
-
-                if (list.Count == 0 && sumVasya == sumPetya)
-                {
-                    Console.WriteLine("YES\n" + numberPetya.ToString() + " " + numberVasya.ToString());
-                }
-
-                else
-                {
-                    Console.WriteLine("NO");
-                }
-
+                Console.WriteLine("YES");
             }
+
             else
             {
                 Console.WriteLine("NO");
@@ -131,8 +103,40 @@ namespace CodeforcesTemplate
 
         }
 
+        private static int CountLeadZeros(string source)
+        {
+            int countZero = 0;
 
-        static int[] CopyOfRange(int[] src, int start, int end)
+            for (int i = source.Length - 1; i >= 0; i--)
+            {
+                if (source[i] == '0')
+                {
+                    countZero++;
+                }
+
+                else
+                {
+                    break;
+                }
+
+            }
+
+            return countZero;
+        }
+
+        private static string ReverseString(string source)
+        {
+            char[] reverseArray = source.ToCharArray();
+
+            Array.Reverse(reverseArray);
+
+            string reversedString = new string(reverseArray);
+
+            return reversedString;
+        }
+
+
+        private static int[] CopyOfRange(int[] src, int start, int end)
         {
             int len = end - start;
             int[] dest = new int[len];
@@ -140,7 +144,7 @@ namespace CodeforcesTemplate
             return dest;
         }
 
-        static string StreamReader()
+        private static string StreamReader()
         {
 
             if (_reader == null)
@@ -153,7 +157,7 @@ namespace CodeforcesTemplate
 
         }
 
-        static void StreamWriter(string text)
+        private static void StreamWriter(string text)
         {
 
             if (_writer == null)
@@ -167,7 +171,7 @@ namespace CodeforcesTemplate
 
 
 
-        public static int BFS(int start, int end, int[,] arr)
+        private static int BFS(int start, int end, int[,] arr)
         {
             Queue<KeyValuePair<int, int>> queue = new Queue<KeyValuePair<int, int>>();
             List<bool> visited = new List<bool>();
